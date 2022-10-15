@@ -66,16 +66,13 @@ public class UserService {
                     System.out.println("Đăng nhập thành công");
                     dangNhapThanhCong(user);
                     return;
-                } else {
-                    quenMatKhau(user);
-                    break;
                 }
             }
+            System.out.println("Tài khoản không tồn tại, hoặc Sai mật khẩu");
+            quenMatKhau();
         }
     }
-
-    public void quenMatKhau(User user) {
-        System.err.println("Tài khoản không tồn tại, hoặc Sai mật khẩu");
+    private void quenMatKhau() {
         System.out.println("1 - Đăng nhập lại");
         System.out.println("2 - Quên mật khẩu");
         int menu = sc.nextInt();
@@ -84,38 +81,29 @@ public class UserService {
             case 1:
                 break;
             case 2:
-                doiLaiMatKhau(user);
-                break;
-        }
-    }
-    public void doiLaiMatKhau(User user){
-        System.out.println("Nhập Email");
-        String email = sc.nextLine();
-        if (patternEmail.matcher(email).find()) {
-            if (kiemTraUserEmail(email)) {
-                while (true) {
-                    System.out.println("Nhập PassWord muốn thay đổi");
-                    String passWord1 = sc.nextLine();
-                    boolean ketQua = kiemTraUserPassWord(passWord1);
-                    if (patternPassWord.matcher(passWord1).find()) {
-                        if (ketQua) {
-                            System.err.println("Mật khẩu mới không thể trùng với mật khẩu cũ");
-                        } else {
-                            for (User user1 : list) {
-                                if (user1.getPassword().equals(user.getPassword())) {
-                                    user.setPassword(passWord1);
-
+                System.out.println("Nhập Email");
+                String email = sc.nextLine();
+                if (patternEmail.matcher(email).find()) {
+                    if (kiemTraUserEmail(email)) {
+                        while (true) {
+                            System.out.println("Nhập PassWord muốn thay đổi");
+                            String passWord1 = sc.nextLine();
+                            if (patternPassWord.matcher(passWord1).find()) {
+                                for (User user : list) {
+                                    if (user.getEmail().equals(email)) {
+                                        user.setPassword(passWord1);
+                                        break;
+                                    }
                                 }
+                                break;
+                            } else {
+                                System.out.println("Định dạng Password không đúng, Vui lòng nhập lại");
                             }
                         }
-                        break;
-                    } else {
-                        System.err.println("Định dạng Password không đúng, Vui lòng nhập lại");
                     }
+                } else {
+                    System.err.println("Chưa tồn tại tài khoản");
                 }
-            }
-        } else {
-            System.err.println("Chưa tồn tại tài khoản");
         }
     }
 
